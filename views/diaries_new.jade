@@ -1,0 +1,7 @@
+extends layout
+
+block content
+  form(action="/diaries/", method='post')
+    input(type="text", name="title")
+    textarea(name="text_body")
+    button(type="submit") 新建

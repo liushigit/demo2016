@@ -1,0 +1,9 @@
+extends ../layout
+
+block content
+  form(action="/users/create", method='post')
+    input(type="text", name="username")
+    input(type="password", name="password")
+
+
+    button(type="submit") 注册

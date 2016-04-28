@@ -4,6 +4,8 @@ var express = require('express')
 var router = express.Router()
 var User = require('../models/user')
 
+
+
 /* GET users listing. */
 router.get('/', (req, res, next) => {
   User.find().exec((err, docs)=> {

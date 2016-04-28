@@ -2,6 +2,19 @@
 
 var express = require('express');
 var router = express.Router();
+var passport = require('passport')
+
+router.post('/login', 
+    passport.authenticate('local', {
+        successRedirect: '/',
+        failureRedirect: '/login',
+        failureFlash: true
+    })
+)
+
+router.get('/login', (req, res, next) => {
+    res.render('login')
+})
 
 /* GET home page. */
 router.get('/', function(req, res, next) {

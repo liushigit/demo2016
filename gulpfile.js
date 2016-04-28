@@ -14,5 +14,5 @@ gulp.task('default', function() {
 
 gulp.task('serve', function () {
   server.run(['bin/www'])
-  gulp.watch(['app.js', 'routes/**/*.js'], server.run)
+  gulp.watch(['app.js', 'routes/**/*.js', 'models/**.*.js'], server.run)
 })

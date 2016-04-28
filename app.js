@@ -9,6 +9,29 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
+var User = require('./models/user')
+
+var passport = require('passport')
+  , LocalStrategy = require('passport-local').Strategy;
+
+passport.use(new LocalStrategy(
+  function(username, password, done) {
+    User.findOne({ username: username }, (err, user) => {
+      if (err) { return done(err); }
+      if (!user) {
+        console.log("no user found")
+        return done(null, false, 
+                    { message: 'Incorrect username.' });
+      }
+      if (!user.validatePassword(password)) {
+        console.log("password is wrong.")
+        return done(null, false, 
+                    { message: 'Incorrect password.' });
+      }
+      return done(null, user);
+    });
+  }
+));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -21,6 +44,39 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+
+ 
+ 
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+  User.findById(id, function(err, user) {
+    done(err, user);
+  });
+});
+
+session = require('express-session')
+
+var sessionStore = new session.MemoryStore();
+
+app.use(session({
+
+    secret: 'Simple Example',
+    resave: true,
+    saveUninitialized: false,
+    cookie: { secure: false },
+    store: sessionStore
+
+}));
+
+ var flash = require('express-flash')
+ app.use(flash());
+
+ app.use(passport.initialize());
+ app.use(passport.session());
 
 app.use('/', routes);
 app.use('/users', users);
